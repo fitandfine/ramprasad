@@ -221,6 +221,37 @@
         <button onclick="sendEmail()">Email</button>
     </div>
 
+<!-- Save My Number Button -->
+<div class="buttons-section">
+    <button onclick="downloadVCF()">Save My Number</button>
+</div>
+
+<script>
+    // Function to download vCard file
+    function downloadVCF() {
+        const vcfData = `
+BEGIN:VCARD
+VERSION:3.0
+FN:Ram Prasad Chapain
+N:Chapain;Ram Prasad;;;
+TEL;TYPE=CELL:+9779858019555
+EMAIL;TYPE=INTERNET:emailofanup@gmail.com
+ADR;TYPE=HOME:;;Nepalgunj, Banke, Nepal;;;;
+ORG:Hardware Supplier and Network Marketing
+TITLE:Entrepreneur
+NOTE:Contact for hardware supplies and network marketing
+END:VCARD
+        `.trim();
+
+        const blob = new Blob([vcfData], { type: "text/vcard" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "Ram_Prasad_Chapain.vcf";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
 
 
     <!-- Footer -->
