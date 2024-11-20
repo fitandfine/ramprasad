@@ -18,6 +18,7 @@
             background-color: #f4f4f4;
             color: #333;
             text-align: center;
+            overflow-x: hidden;
         }
 
         /* Lazy-loading background */
@@ -30,7 +31,7 @@
             height: 100%;
             background: url('images/bg.webp') no-repeat center center fixed;
             background-size: cover;
-            filter: blur(8px);
+            filter: blur(5px);
             z-index: -1;
         }
 
@@ -45,13 +46,13 @@
         .header h1 {
             margin: 0;
             font-size: 1.8rem;
-            color: #333;
+            color: #00796b;
         }
 
         .header h2 {
             margin: 5px 0;
             font-size: 1rem;
-            color: #555;
+            color: #333;
         }
 
         /* Profile Section */
@@ -61,13 +62,27 @@
 
         .profile-photo img {
             width: 150px;
-            height: 150px;
+            height: auto;
             border-radius: 50%;
             border: 4px solid #00796b;
+            object-fit: cover;
         }
 
+        /* Translucent Section for Details */
         .personal-info {
-            margin: 15px 0;
+            margin: 20px auto;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .personal-info p {
+            margin: 5px 0;
+            color: #333;
+            font-size: 1rem;
         }
 
         /* Buttons Section */
@@ -98,23 +113,70 @@
             transform: scale(1.05);
         }
 
-        /* QR Code Section */
-        .qr-section {
-            margin: 30px 0;
-        }
-
-        .qr-section img {
-            width: 200px;
-            height: 200px;
-            border: 4px solid #00796b;
-            border-radius: 10px;
-        }
-
-        /* Footer */
+        /* Footer Section */
         .footer {
             margin: 20px auto;
+            padding: 15px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            text-align: center;
+        }
+
+        .footer button {
+            background: #00796b;
+            border: none;
+            color: white;
+            padding: 10px 15px;
             font-size: 0.8rem;
-            color: #555;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .footer button:hover {
+            background: #005a48;
+        }
+
+        /* Popup Styling */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .popup-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            color: #333;
+        }
+
+        .popup img {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+
+        .popup .close-btn {
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #e74c3c;
+        }
+
+        .popup .close-btn:hover {
+            color: #c0392b;
         }
 
         @media (max-width: 768px) {
@@ -157,18 +219,35 @@
         <button onclick="sendSMS()">SMS</button>
         <button onclick="sendWhatsApp()">WhatsApp</button>
         <button onclick="sendEmail()">Email</button>
-        <button onclick="viewFacebook()">Facebook</button>
-        <button onclick="downloadVCF()">Save Contact</button>
     </div>
 
-    <!-- QR Code Section -->
-    <div class="qr-section">
-        <img src="images/qr.png" alt="Page QR Code">
-    </div>
+
 
     <!-- Footer -->
     <div class="footer">
-        Developed with love by Anup in Auckland, NZ!
+        <button onclick="showQRPopup()">Show QR</button>
+        <button onclick="nativeShare()">Share Page</button>
+        <button onclick="showAboutPopup()">About Developer</button>
+       
+    </div>
+
+    <!-- QR Popup -->
+    <div class="popup" id="qr-popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="hidePopup('qr-popup')">&times;</span>
+            <h3>Scan to Share</h3>
+            <img src="images/qr.png" alt="QR Code">
+        </div>
+    </div>
+
+    <!-- About Developer Popup -->
+    <div class="popup" id="about-popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="hidePopup('about-popup')">&times;</span>
+            <h3>About Developer</h3>
+            <p>Developed with love by <strong>Anup</strong> in Auckland, NZ.</p>
+            <p>Email: <a href="mailto:emailofanup@gmail.com">emailofanup@gmail.com</a></p>
+        </div>
     </div>
 
     <script>
@@ -192,29 +271,32 @@
             window.location.href = "mailto:Naya527808@gmail.com";
         }
 
-        // Facebook Function
-        function viewFacebook() {
-            window.open("https://www.facebook.com/ram.chapain?mibextid=LQQJ4d", "_blank");
+        // Native Share Function
+        function nativeShare() {
+            if (navigator.share) {
+                navigator.share({
+                    title: "Ram Prasad Chapain's Contact Page",
+                    text: "Check out Ram Prasad Chapain's contact page!",
+                    url: window.location.href
+                }).catch((err) => console.error("Sharing failed:", err));
+            } else {
+                alert("Sharing is not supported on this browser.");
+            }
         }
 
-        // Download VCF File
-        function downloadVCF() {
-            const vcfData = `
-BEGIN:VCARD
-VERSION:3.0
-FN:Ram Prasad Chapain
-TEL:+9779858019555
-EMAIL:Naya527808@gmail.com
-ADR:Nepalgunj, Banke, Nepal
-END:VCARD
-            `.trim();
-            const blob = new Blob([vcfData], { type: "text/vcard" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "Ram_Prasad_Chapain.vcf";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        // Show QR Popup
+        function showQRPopup() {
+            document.getElementById("qr-popup").style.display = "flex";
+        }
+
+        // Show About Developer Popup
+        function showAboutPopup() {
+            document.getElementById("about-popup").style.display = "flex";
+        }
+
+        // Hide Popup
+        function hidePopup(popupId) {
+            document.getElementById(popupId).style.display = "none";
         }
     </script>
 </body>
